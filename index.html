@@ -1,0 +1,181 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Experience design XD</title>
+
+        <link href="./style/style.css" rel="stylesheet" />
+
+    </head>
+
+    <body>
+
+      <div class="w--items js--resize_wrapper">
+        <span class="w--items_item">
+          <div class="media"><!--
+          --><span class="img"></span><!--
+          --><div class="content">
+              <p class="title">Vivamus viverra</p>
+              <p>
+               Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+              </p>
+            </div>
+          </div>
+        </span>
+        <span class="w--items_item"><div class="media">
+          <span class="img"></span>
+          <div class="content">
+            <p class="title">Vivamus viverra</p>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            </p>
+          </div>
+        </div></span>
+        <span class="w--items_poignet right js--resize_poignet"></span>
+        <span class="w--items_poignet bottom js--resize_poignet"></span>
+      </div>
+
+		<script type="text/javascript" src="./js/script.js"></script>
+
+    <script>
+
+        /**
+         * [duplicateItem description]
+         * @return {[type]} [description]
+         */
+        function duplicateItem(){
+          var oClone = oItemClone.cloneNode(true);
+          _aItems.push( oClone);
+          this.insertBefore( oClone, oPoignetRight);
+        }
+
+        /**
+         * [removeItem description]
+         * @return {[type]} [description]
+         */
+        function removeItem(){
+          oItemsRemove = _aItems.pop();
+          this.removeChild( oItemsRemove);
+        }
+
+        /**
+         * [fillSpace description]
+         * @param  {[type]} e [description]
+         * @return {[type]}   [description]
+         */
+        function fillSpace( e){
+            var iWidth     = parseInt( e.detail.width ),
+                iHeight    = parseInt( e.detail.height ),
+                iSpace     = iWidth * iHeight,
+                iSpaceFree = iSpace - (iItemSpace * this.querySelectorAll('.w--items_item').length),
+                iNeed      = Math.floor( iSpaceFree / iItemSpace),
+                fAction    = function(){};
+
+            _aItems     = [].slice.apply( this.querySelectorAll('.w--items_item'));
+
+            if( iNeed < 0){
+              iNeed   *= -1;
+              fAction = removeItem.bind( this);
+            }else{
+              fAction = duplicateItem.bind( this);
+            }
+
+            for( ; iNeed > 0 ; iNeed--){
+              fAction();
+            }
+        }
+        /**
+         * [fillItemContent description]
+         * @return {[type]} [description]
+         */
+        function fillItemContent(){
+          var oImg  = null,
+              oItem = null,
+              oDiv  = null,
+              i     = 0;
+
+          while( oImg = aImgPattern.pop()){
+                if( oItem = _aItems.shift()){
+
+                  oDiv = oItem.querySelector('.img');
+                  oDiv.innerHTML = '';
+                  oDiv.appendChild( oImg);
+                }
+          }
+        }
+
+        var oWrapper       = document.querySelector('.js--resize_wrapper'),
+            oItem          = oWrapper.querySelector('.w--items_item'),
+            oItemClone     = oItem.cloneNode(true),
+            oSize          = oItem.getBoundingClientRect(),
+            iItemSpace     = oSize.width * oSize.height,
+            _aItems        = [].slice.apply( oWrapper.querySelectorAll('.w--items_item')),
+            aImgPattern    = [],
+            oPoignetRight  = document.querySelector('.js--resize_poignet.right'),
+            oPoignetBottom = document.querySelector('.js--resize_poignet.bottom');
+
+        oResize = new Resize({
+          parent   : oWrapper,
+          poignets : [
+              oPoignetRight,
+              oPoignetBottom
+          ]
+        });
+
+        oWrapper.addEventListener('stopresize', fillSpace);
+
+        oWrapper.addEventListener('drop', function( e){
+
+          var i           = 0,
+              aFiles      = e.dataTransfer.files,
+              iCount      = aFiles.length,
+              oFile       = null,
+              oImg        = null,
+              iValid      = 0;
+
+          aImgPattern = [];
+
+          e.preventDefault();
+          this.classList.remove('dragenter');
+
+          for( ; i < iCount ; i++){
+            oFile = aFiles[ i ];
+
+            if( ~oFile.type.indexOf('image/')){
+              iValid++;
+              var reader    = new FileReader();
+
+              reader.onload = function( e){
+                  iValid--;
+                  oImg     = document.createElement('IMG');
+                  oImg.src = e.target.result;
+
+                  aImgPattern.push( oImg);
+
+                  if( iValid === 0)
+                    fillItemContent();
+              };
+
+              reader.readAsDataURL( oFile);
+            }
+
+          }
+
+        });
+
+        oWrapper.addEventListener('dragover', function( e){
+          e.preventDefault();
+          this.classList.add('dragenter');
+        });
+
+        oWrapper.addEventListener('dragleave', function( e){
+          e.preventDefault();
+          this.classList.remove('dragenter');
+        });
+
+    </script>
+    </body>
+
+</html>

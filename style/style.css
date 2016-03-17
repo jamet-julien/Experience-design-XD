@@ -1,0 +1,101 @@
+body, html{
+	width : 100%;
+	padding: 0;
+	margin: 0;
+	font-family: sans-serif;
+}
+
+.w--items{
+		border     : 1px solid #ccc;
+		display    : block;
+		padding    : 0;
+		list-style : none;
+		margin     : 50px auto;
+		width: 252px;
+		height: 502px;
+		position   : relative;
+		line-height: 0px;
+		overflow   : hidden;
+		box-sizing : border-box;
+}
+	.dragenter{
+		border-color    : #88e495;
+	}
+
+	.w--items_poignet{
+		display         : inline-block;
+		position        : absolute;
+		background-color: transparent;
+		cursor          : pointer;
+		z-index : 2;
+	}
+
+	.w--items_poignet:hover{
+		background-color: rgba( 0, 0, 0, 0.1);
+	}
+
+	.w--items_poignet.right{
+		top    : 0;
+		bottom : 0;
+		width  : 15px;
+		right  : 0;
+	}
+	.w--items_poignet.right:hover{
+	}
+
+	.w--items_poignet.bottom{
+		left   : 0;
+		right  : 0;
+		height : 15px;
+		bottom : 0;
+	}
+	.w--items_poignet.bottom:hover{
+	}
+
+	.w--items_item{
+		display   : block;
+		float     : left;
+    width     : 250px;
+    height    : 70px;
+    box-sizing: border-box;
+    margin    : 0px;
+		padding   : 10px;
+	}
+
+		.w--items_item .media{}
+
+		.w--items_item .media .img img{}
+
+/**
+ *
+ */
+ .media {
+	 border: 1px solid #ccc;
+ }
+
+ .media, .content {
+   overflow  : hidden;
+   _overflow : visible;
+   zoom      : 1;
+ }
+	 .media .content p{
+		 line-height: 10px;
+			font-size: 12px;
+		}
+ 	 .media .content .title{
+			    line-height: 3px;
+	 }
+   .media .img {
+     float           : left;
+		 width           : 65px;
+			height         : 59px;
+		 background-color: #ccc;
+		 margin-right    : 5px;
+		 overflow        : hidden;
+   }
+
+	 	.img img{
+			width : 100%;
+			height : 100%;
+			object-fit: cover;
+		}
